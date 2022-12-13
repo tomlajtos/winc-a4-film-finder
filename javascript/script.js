@@ -24,3 +24,10 @@ const createPoster = function(movie) {
   poster.classList.add("movie-poster");
   return poster;
 };
+
+/* function to add poster to the #poster-galery element
+ * @param {object} movie object from imported movies array */
+const addPoster = function(movie) {
+  const galery = document.getElementById("movie-galery");
+  galery.appendChild(createPoster(movie));
+};
