@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Winc Film Finder</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="styles.css" type="text/css" rel="stylesheet" />
+  <script type="module" src="./javascript/script.js" defer></script>
+  <script type="module" src="./javascript/movie-database.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <h1>Winc Film Finder</h1>
+    <section>
+      <div id="search-bar">
+        <label for="">
+          <input id="movie-search" type="search" name="movie-search" value="" />
+        </label>
+        <button id="search-button" type="submit">Search</button>
+      </div>
+      <div id="filters">
+        <label for="latest-movies"><input id="latest-movies" type="radio" name="movie-filter" value="latest" />Latest
+          movies (from 2014)</label>
+        <label for="avanger-movies"><input id="avanger-movies" type="radio" name="movie-filter"
+            value="avanger" />Avenger movies</label>
+        <label for="x-men-movies"><input id="x-men-movies" type="radio" name="movie-filter" value="x-men" />X-Men
+          movies</label>
+        <label for="princess-movies"><input id="princess-movies" type="radio" name="movie-filter"
+            value="princess" />Princess movies</label>
+        <label for="batman-movies"><input id="batman-movies" type="radio" name="movie-filter" value="batman" />Batman
+          movies
+        </label>
+      </div>
+    </section>
+  </header>
+  <main>
+    <div id="movie-galery"></div>
+  </main>
+  <footer></footer>
+</body>
+
+</html>
