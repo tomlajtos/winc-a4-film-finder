@@ -1,14 +1,19 @@
+/* eslint-disable no-unused-vars */
 /* WINC FILM FINDER
  * Assignment film finder
  * Functionalities:
  * - display a movie poster as gallery
- * - filter movies (latest, avanger, x-men, princess, batman)
+ * - filter movies (latest, avenger, x-men, princess, batman)
  *   1 category at a time with radio buttons
  * - clicking the poster opens coresponding imdb page
  * BONUS feature(s):
  * - search field to search by movie name */
 
 import { movies } from "./movie-database.js";
+
+/* global variable for movie-gallery element
+ * to use with addPoster and clearGallery functions */
+const gallery = document.getElementById("movie-gallery");
 
 /* function to create a .movie-poster element
  * @param {object} movie object from imported movies array
@@ -35,11 +40,24 @@ const createPoster = function(movie) {
   return poster;
 };
 
-/* function to add poster to the #poster-galery element
- * @param {object} movie object from imported movies array */
-const addPoster = function(movie) {
-  const galery = document.getElementById("movie-galery");
-  galery.appendChild(createPoster(movie));
+/* function to add poster to the #poster-gallery element
+- * @param {object} movie object from imported movies array */
+const addPoster = (movie) => gallery.appendChild(createPoster(movie));
+
+/* functions clear the movie-gallery before a new filtering happens
+ * removes each poster from  gallery if not empty */
+const clearGallery = function(name) {
+  const postersArr = Array.from(
+    document.getElementsByClassName("movie-poster")
+  );
+
+  postersArr.length > 0
+    ? postersArr.forEach((poster) => gallery.removeChild(poster))
+    : console.warn(
+      `WARNING: (disregard if first call of clearGallery function)
+       Cannot clear movie-gallery of ${name}-movies, there are no child-elements to remove`,
+      gallery.children
+    );
 };
 
 /* function to filter movies by date,
@@ -72,7 +90,8 @@ const filterMoviesByDate = (
  * steps:
  * - filter array argument based on date arguments/ or defaults
  * - loop through the sorted array and call addPoster() on each element */
-const filterMoviesByName = (moviesArr, phrase) =>
+const filterMoviesByName = (moviesArr, phrase) => {
   moviesArr
-    .filter((movie) => movie.title.includes(phrase))
+    .filter((movie) => movie.title.toLowerCase().includes(phrase))
     .forEach((movie) => addPoster(movie));
+};

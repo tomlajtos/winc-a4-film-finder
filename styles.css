@@ -18,6 +18,7 @@ html {
   font-size: 10px;
 }
 body {
+  width: 100%;
   background-color: var(--black);
   font-family: "Roboto", sans-serif;
   color: var(--white);
@@ -38,7 +39,7 @@ a:active {
   text-decoration: none;
 }
 
-#movie-galery {
+#movie-gallery {
   margin: 0 auto;
   max-width: 1000px;
   display: grid;
