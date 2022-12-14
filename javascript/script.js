@@ -1,11 +1,18 @@
+//TODO
+// - rewrite filterMoviesByDate function so it can use range input as well @param --> string + includes?
+// - change movie to film in index styles and script
+// - implement search functionality
+// - add show all options to filtering
+
 /* eslint-disable no-unused-vars */
+
 /* WINC FILM FINDER
  * Assignment film finder
  * Functionalities:
  * - display a movie poster as gallery
  * - filter movies (latest, avenger, x-men, princess, batman)
  *   1 category at a time with radio buttons
- * - clicking the poster opens coresponding imdb page
+ * - clicking the poster opens corresponding imdb page
  * BONUS feature(s):
  * - search field to search by movie name */
 
@@ -43,8 +50,7 @@ const createPoster = function(movie) {
 /* function to add poster to the #poster-gallery element
 - * @param {object} movie object from imported movies array */
 const addPoster = (movie) => gallery.appendChild(createPoster(movie));
-
-/* functions clear the movie-gallery before a new filtering happens
+/* functions clear the movie-gallery before a new filter is applied
  * removes each poster from  gallery if not empty */
 const clearGallery = function(name) {
   const postersArr = Array.from(
@@ -86,12 +92,60 @@ const filterMoviesByDate = (
  * this can be used for the other 4 filter options (avang.,X-m.,prin., batm.)
  * @param {array} - the imported movies array
  * @param {string} - phrase, value of selected radio input
- * If no argument(s) provided for date(s), default values are used
- * steps:
- * - filter array argument based on date arguments/ or defaults
+ * - filter array argument based on phrase argument (radio-input value)
  * - loop through the sorted array and call addPoster() on each element */
 const filterMoviesByName = (moviesArr, phrase) => {
   moviesArr
     .filter((movie) => movie.title.toLowerCase().includes(phrase))
     .forEach((movie) => addPoster(movie));
 };
+
+/* function to add the posters of each movie
+ * that fits the selected filter to the movie-gallery
+ * @param {array} - the imported movies array
+ * @param {string} - phrase, value of selected radio input
+ * (event handler on radio-button change event)
+ * */
+const buildFilteredGallery = function(moviesArr, phrase) {
+  clearGallery(phrase);
+  switch (phrase) {
+    case "latest":
+      filterMoviesByDate(moviesArr, 2014);
+      break;
+    case "avenger":
+      filterMoviesByName(moviesArr, "avenger");
+      break;
+    case "x-men":
+      filterMoviesByName(moviesArr, "x-men");
+      break;
+    case "princess":
+      filterMoviesByName(moviesArr, "princess");
+      break;
+    case "batman":
+      filterMoviesByName(moviesArr, "batman");
+      break;
+    //   add "show all" option?
+    //   default:
+    //     filterMoviesByDate(moviesArr);
+  }
+};
+
+/* function to add event listener to each radio button
+ * loop through an array of filter-radio-button elements
+ * add change event to each
+ * use buildFilteredGallery() as event handler */
+const addListenerToFilterButtons = function() {
+  const filterButtonArr = Array.from(
+    document.getElementsByClassName("filter-button")
+  );
+
+  filterButtonArr.forEach(
+    (input) =>
+      input.addEventListener("change", (e) =>
+        buildFilteredGallery(movies, e.target.value)
+      ),
+    false
+  );
+};
+
+addListenerToFilterButtons();
