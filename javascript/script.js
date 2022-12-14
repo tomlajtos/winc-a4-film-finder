@@ -1,8 +1,8 @@
 //TODO
-// - rewrite filterMoviesByDate function so it can use range input as well @param --> string + includes?
-// - change movie to film in index styles and script
+// - no need to rewrite filterMoviesByDate - only series have date as range (see next point)
+// - change filter functions to omit "series" type from movies array -->DONE
 // - implement search functionality
-// - add show all options to filtering
+// - add "show all movies" option to filtering
 
 /* eslint-disable no-unused-vars */
 
@@ -84,7 +84,8 @@ const filterMoviesByDate = (
     .filter(
       (movie) =>
         Number(movie.year) >= Number(dateFrom) &&
-        Number(movie.year) <= Number(dateUntil)
+        Number(movie.year) <= Number(dateUntil) &&
+        movie.type === "movie"
     )
     .forEach((movie) => addPoster(movie));
 
@@ -96,7 +97,10 @@ const filterMoviesByDate = (
  * - loop through the sorted array and call addPoster() on each element */
 const filterMoviesByName = (moviesArr, phrase) => {
   moviesArr
-    .filter((movie) => movie.title.toLowerCase().includes(phrase))
+    .filter(
+      (movie) =>
+        movie.title.toLowerCase().includes(phrase) && movie.type === "movie"
+    )
     .forEach((movie) => addPoster(movie));
 };
 
@@ -124,7 +128,7 @@ const buildFilteredGallery = function(moviesArr, phrase) {
     case "batman":
       filterMoviesByName(moviesArr, "batman");
       break;
-    //   add "show all" option?
+    //   add "show all movies" option?
     //   default:
     //     filterMoviesByDate(moviesArr);
   }
