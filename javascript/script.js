@@ -1,6 +1,6 @@
 //TODO
 // - no need to rewrite filterMoviesByDate - only series have date as range (see next point)
-// - change filter functions to omit "series" type from movies array -->DONE
+// - change filter functions to omit "series" type from movies array --> DONE
 // - implement search functionality
 // - add "show all movies" option to filtering
 
@@ -12,6 +12,8 @@
  * - display a movie poster as gallery
  * - filter movies (latest, avenger, x-men, princess, batman)
  *   1 category at a time with radio buttons
+ *    As the requirements are about movies, series will not be
+ *    included in the results.
  * - clicking the poster opens corresponding imdb page
  * BONUS feature(s):
  * - search field to search by movie name */
@@ -50,7 +52,8 @@ const createPoster = function(movie) {
 /* function to add poster to the #poster-gallery element
 - * @param {object} movie object from imported movies array */
 const addPoster = (movie) => gallery.appendChild(createPoster(movie));
-/* functions clear the movie-gallery before a new filter is applied
+
+/* function to clear the movie-gallery before a new filter is applied
  * removes each poster from  gallery if not empty */
 const clearGallery = function(name) {
   const postersArr = Array.from(
@@ -108,8 +111,8 @@ const filterMoviesByName = (moviesArr, phrase) => {
  * that fits the selected filter to the movie-gallery
  * @param {array} - the imported movies array
  * @param {string} - phrase, value of selected radio input
- * (event handler on radio-button change event)
- * */
+ * (called by the anonym event handler on radio-button
+ * change event) */
 const buildFilteredGallery = function(moviesArr, phrase) {
   clearGallery(phrase);
   switch (phrase) {
