@@ -1,3 +1,13 @@
+<!--TODO
+- add radio-input #all-movies to have a filter uption for that 
+- change container element of radi-input elements from div to 
+  a semntiacally better one (nav?)
+- remove section element from header repalce div container for
+  serachbar for the same reason as above 
+- make poster galery more accessibility compliant, use ul & li
+  instead of divs
+- footer, add smthing ? 
+-->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,27 +23,28 @@
 <body>
   <header>
     <h1>Winc Film Finder</h1>
-    <section>
-      <div id="search-bar">
-        <label for="">
-          <input id="movie-search" type="search" name="movie-search" value="" />
-        </label>
-        <button id="search-button" type="submit">Search</button>
-      </div>
-      <div id="filters">
-        <label for="latest-movies"><input id="latest-movies" class="filter-button" type="radio" name="movie-filter"
-            value="latest" />Latest movies (from 2014)</label>
-        <label for="avenger-movies"><input id="avenger-movies" class="filter-button" type="radio" name="movie-filter"
-            value="avenger" />Avenger movies</label>
-        <label for="x-men-movies"><input id="x-men-movies" class="filter-button" type="radio" name="movie-filter"
-            value="x-men" />X-Men movies</label>
-        <label for="princess-movies"><input id="princess-movies" class="filter-button" type="radio" name="movie-filter"
-            value="princess" />Princess movies</label>
-        <label for="batman-movies"><input id="batman-movies" class="filter-button" type="radio" name="movie-filter"
-            value="batman" />Batman movies
-        </label>
-      </div>
-    </section>
+    <div id="search-bar">
+      <label for="movie-search">
+        <input id="movie-search" type="search" name="movie-search" value="" />
+      </label>
+      <button id="search-button" type="button">Search</button>
+    </div>
+    <div id="filters">
+      <label for="latest-movies"><input id="latest-movies" class="filter-button" type="radio" name="movie-filter"
+          value="latest" />Latest movies (from 2014)</label>
+      <label for="avenger-movies"><input id="avenger-movies" class="filter-button" type="radio" name="movie-filter"
+          value="avenger" />Avenger movies</label>
+      <label for="x-men-movies"><input id="x-men-movies" class="filter-button" type="radio" name="movie-filter"
+          value="x-men" />X-Men movies</label>
+      <label for="princess-movies"><input id="princess-movies" class="filter-button" type="radio" name="movie-filter"
+          value="princess" />Princess movies</label>
+      <label for="batman-movies"><input id="batman-movies" class="filter-button" type="radio" name="movie-filter"
+          value="batman" />Batman movies
+      </label>
+      <label for="all-movies"><input id="all-movies" class="filter-button" type="radio" name="movie-filter"
+          value="all-movies" checked />Show all movies
+      </label>
+    </div>
   </header>
   <main>
     <div id="movie-gallery"></div>
