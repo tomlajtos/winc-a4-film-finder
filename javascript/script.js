@@ -162,13 +162,15 @@ const buildFilteredGallery = function (moviesArr, phrase) {
 /* function to search for movies by checking if
  * search bar input-value is part of the movie title
  * @param {array} - the imported movies array
- *  - gets searchBar value and passes it into
- *  filterMoviesByName function as arg.
- *  event handler for search-button click event */
+ * - gets searchBar value and passes it into
+ *   filterMoviesByName function as arg.
+ * - called by the anonym event handler function
+ *   for search-button click event */
 const searchInMovieTitle = function (moviesArr) {
-  clearGallery(searchBar.value);
-  //console.log(searchBar.value);
-  filterMoviesByName(moviesArr, searchBar.value);
+  const input = searchBar.value.trim();
+
+  clearGallery(input);
+  filterMoviesByName(moviesArr, input);
 };
 
 // FUNCTIONS FOR EVENT LISTENERS
@@ -197,6 +199,7 @@ const addListenersToSearch = function () {
   searchBar.addEventListener("keypress", (e) => {
     e.key === "Enter" ? searchInMovieTitle(movies) : e.key;
   });
+
   searchButton.addEventListener("click", () => {
     searchInMovieTitle(movies);
   });
