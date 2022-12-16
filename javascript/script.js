@@ -2,7 +2,7 @@
 // - no need to rewrite filterMoviesByDate - only series have date as range (see next point)
 // - change filter functions to omit "series" type from movies array --> DONE
 // - implement search functionality
-// - add "show all movies" option to filtering
+// - add "show all movies" option to filtering --> DONE
 
 /* eslint-disable no-unused-vars */
 
@@ -28,7 +28,7 @@ const gallery = document.getElementById("movie-gallery");
  * @param {object} movie object from imported movies array
  * @return {object} html element, poster
  */
-const createPoster = function(movie) {
+const createPoster = function (movie) {
   const imdbLink = `https://www.imdb.com/title/${movie.imdbID}/`;
   //create elements
   const poster = document.createElement("div");
@@ -55,7 +55,7 @@ const addPoster = (movie) => gallery.appendChild(createPoster(movie));
 
 /* function to clear the movie-gallery before a new filter is applied
  * removes each poster from  gallery if not empty */
-const clearGallery = function(name) {
+const clearGallery = function (name) {
   const postersArr = Array.from(
     document.getElementsByClassName("movie-poster")
   );
@@ -63,10 +63,10 @@ const clearGallery = function(name) {
   postersArr.length > 0
     ? postersArr.forEach((poster) => gallery.removeChild(poster))
     : console.warn(
-      `WARNING: (disregard if first call of clearGallery function)
+        `WARNING: (disregard if first call of clearGallery function)
        Cannot clear movie-gallery of ${name}-movies, there are no child-elements to remove`,
-      gallery.children
-    );
+        gallery.children
+      );
 };
 
 /* function to filter movies by date,
@@ -107,14 +107,30 @@ const filterMoviesByName = (moviesArr, phrase) => {
     .forEach((movie) => addPoster(movie));
 };
 
+/* function to show all movies (series are ignored)
+ * if radio-input #all-movies has checked attr.:
+ * -> filterMoviesByDate - with default params.
+ * - show warning for dev purposes if no checked attr.
+ * IMPORTANT: call function in global context to have
+ * movie finder show all movies by default */
+const showAllMovies = (moviesArr) => {
+  const filterForAll = document.getElementById("all-movies");
+
+  filterForAll.checked
+    ? filterMoviesByDate(moviesArr)
+    : console.warn("showAllMovies:", filterForAll.checked);
+};
+
 /* function to add the posters of each movie
  * that fits the selected filter to the movie-gallery
+ * shows all movies as default option
  * @param {array} - the imported movies array
  * @param {string} - phrase, value of selected radio input
  * (called by the anonym event handler on radio-button
  * change event) */
-const buildFilteredGallery = function(moviesArr, phrase) {
+const buildFilteredGallery = function (moviesArr, phrase) {
   clearGallery(phrase);
+  // call filter functions based on input-value (phrase)
   switch (phrase) {
     case "latest":
       filterMoviesByDate(moviesArr, 2014);
@@ -131,9 +147,8 @@ const buildFilteredGallery = function(moviesArr, phrase) {
     case "batman":
       filterMoviesByName(moviesArr, "batman");
       break;
-    //   add "show all movies" option?
-    //   default:
-    //     filterMoviesByDate(moviesArr);
+    default:
+      showAllMovies(moviesArr);
   }
 };
 
@@ -141,7 +156,7 @@ const buildFilteredGallery = function(moviesArr, phrase) {
  * loop through an array of filter-radio-button elements
  * add change event to each
  * use buildFilteredGallery() as event handler */
-const addListenerToFilterButtons = function() {
+const addListenerToFilterButtons = function () {
   const filterButtonArr = Array.from(
     document.getElementsByClassName("filter-button")
   );
@@ -155,4 +170,5 @@ const addListenerToFilterButtons = function() {
   );
 };
 
+showAllMovies(movies);
 addListenerToFilterButtons();
