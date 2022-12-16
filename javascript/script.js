@@ -20,9 +20,14 @@
 
 import { movies } from "./movie-database.js";
 
-/* global variable for movie-gallery element
- * to use with addPoster and clearGallery functions */
+/* global variables for movie-gallery and search
+ * to use with addPoster, clearGallery and
+ * searchInMovieTitle functions */
 const gallery = document.getElementById("movie-gallery");
+const searchBar = document.getElementById("movie-search");
+const searchButton = document.getElementById("search-button");
+
+// FUNCTIONS FOR FILTERING
 
 /* function to create a .movie-poster element
  * @param {object} movie object from imported movies array
@@ -152,6 +157,22 @@ const buildFilteredGallery = function (moviesArr, phrase) {
   }
 };
 
+//FUNCTIONS FOR SEARCH
+
+/* function to search for movies by checking if
+ * search bar input-value is part of the movie title
+ * @param {array} - the imported movies array
+ *  - gets searchBar value and passes it into
+ *  filterMoviesByName function as arg.
+ *  event handler for search-button click event */
+const searchInMovieTitle = function (moviesArr) {
+  clearGallery(searchBar.value);
+  //console.log(searchBar.value);
+  filterMoviesByName(moviesArr, searchBar.value);
+};
+
+// FUNCTIONS FOR EVENT LISTENERS
+
 /* function to add event listener to each radio button
  * loop through an array of filter-radio-button elements
  * add change event to each
@@ -170,5 +191,18 @@ const addListenerToFilterButtons = function () {
   );
 };
 
+/* function to add event listener to search button ("click")
+ * and search bar ("keypress") */
+const addListenersToSearch = function () {
+  searchBar.addEventListener("keypress", (e) => {
+    e.key === "Enter" ? searchInMovieTitle(movies) : e.key;
+  });
+  searchButton.addEventListener("click", () => {
+    searchInMovieTitle(movies);
+  });
+};
+
+// CALL FUNCTIONS
 showAllMovies(movies);
 addListenerToFilterButtons();
+addListenersToSearch();
