@@ -191,12 +191,41 @@ const buildFilteredGallery = function(moviesArr, phrase) {
  * @param {array} - the imported movies array
  * @param {string} - user input from search
  *
- * - calles filterMoviesByName function
+ * - calls filterMoviesByName function
+ * - calls showNoResultFeedback function
  */
 const searchInMovieTitle = function(moviesArr, input) {
   clearGallery(input);
 
   filterMoviesByName(moviesArr, input.toLowerCase());
+  showNoResultFeedback();
+};
+
+/* function to add feedback message to the gallery if no movie matches
+ * the search terms
+ *
+ * - create feedback element
+ * - check for gallery size
+ * - if gallery is empty:
+ *   show all movies and feedback message above posters grid
+ */
+const showNoResultFeedback = function() {
+  // create feedback element with feedback message
+  const noResultFeedback = document.createElement("p");
+  const filterForAll = document.getElementById("all-movies");
+  const galleryContent = document.getElementsByClassName("gallery-item");
+
+  noResultFeedback.classList.add("feedback", "gallery-item");
+  noResultFeedback.innerHTML = `Sorry, but no movie matches your search criteria.`;
+
+  if (!galleryContent.length) {
+    // show all movies if no movie matches search terms
+    filterForAll.checked = true;
+    showAllMovies(movies);
+
+    // show feedback message
+    gallery.prepend(noResultFeedback);
+  }
 };
 
 /* function that calls the appropriate search function based on the
@@ -210,6 +239,7 @@ const searchInMovieTitle = function(moviesArr, input) {
  *
  * this function handles key-press and click events on search
  */
+
 const searchHandler = function() {
   const searchInput = searchBar.value.trim();
   const dateRegEx = /(\d{4})+/g; //to be used with date search function
