@@ -31,6 +31,8 @@ import { movies } from "./movie-database.js";
 const gallery = document.getElementById("movie-gallery");
 const searchBar = document.getElementById("movie-search");
 const searchButton = document.getElementById("search-button");
+const filterButtons = document.getElementsByClassName("filter-button");
+const filterForAll = document.getElementById("all-movies");
 const currentYear = new Date().getFullYear();
 
 // FUNCTIONS FOR FILTERING
@@ -91,6 +93,7 @@ const clearGallery = function(name) {
  *
  * @param {array} - the imported movies array
  * @param {string or int} - date, from year (of release) default: 1890
+ *                          (no movie on IMDB is older than 1890)
  * @param {string, int or null} - date, until year (of release) default: current year
  *   OR null: only movies matching dateFrom are filtered
  * if no argument(s) provided for date(s), default values are used
@@ -144,7 +147,7 @@ const filterMoviesByName = (moviesArr, phrase) => {
  * movie finder show all movies by default
  */
 const showAllMovies = (moviesArr) => {
-  const filterForAll = document.getElementById("all-movies");
+  // const filterForAll = document.getElementById("all-movies");
 
   filterForAll.checked
     ? filterMoviesByDate(moviesArr)
@@ -198,6 +201,47 @@ const searchInMovieTitle = function(moviesArr, input) {
   clearGallery(input);
 
   filterMoviesByName(moviesArr, input.toLowerCase());
+
+  // reset radio-buttons to unchecked
+  Array.from(filterButtons).forEach((button) => (button.checked = false));
+
+  showNoResultFeedback();
+};
+
+/* function to search for movies based on their release date
+ * @param {array} - the imported movies array
+ * @param {string} - user input from search
+ * @param {RegEx} - to match 4-digit numbers in search input
+ * - get search input
+ * - remove duplicate dates
+ *   sort dates
+ * - if 2 or more dates and no "-": display movies released in those years
+ * - if 2 dates with "-" in between: display movies in date-range
+ * - if 1 date: display movies released that specific year
+ */
+const searchMoviesByDate = function(moviesArr, input, dateRegEx) {
+  clearGallery(input);
+
+  // get rid of date duplicates [split]->{Set}->[Arr]
+  const dateInputArr = Array.from(new Set(input.match(dateRegEx))).sort(
+    (a, b) => a - b
+  );
+
+  // check if input is a time period (yyyy - yyyy)
+  const isPeriodInput = input.includes("-");
+
+  //filter movies based on input
+  if (dateInputArr.length >= 2 && !isPeriodInput) {
+    dateInputArr.forEach((date) => filterMoviesByDate(moviesArr, date, null));
+  } else if (isPeriodInput) {
+    filterMoviesByDate(moviesArr, dateInputArr[0], dateInputArr[1]);
+  } else {
+    filterMoviesByDate(moviesArr, dateInputArr[0], null);
+  }
+
+  // reset radio-buttons to unchecked
+  Array.from(filterButtons).forEach((button) => (button.checked = false));
+
   showNoResultFeedback();
 };
 
@@ -211,9 +255,8 @@ const searchInMovieTitle = function(moviesArr, input) {
  */
 const showNoResultFeedback = function() {
   // create feedback element with feedback message
-  const noResultFeedback = document.createElement("p");
-  const filterForAll = document.getElementById("all-movies");
   const galleryContent = document.getElementsByClassName("gallery-item");
+  const noResultFeedback = document.createElement("p");
 
   noResultFeedback.classList.add("feedback", "gallery-item");
   noResultFeedback.innerHTML = `Sorry, but no movie matches your search criteria.`;
@@ -232,7 +275,7 @@ const showNoResultFeedback = function() {
  * input type
  *
  * - check if search input is text
- * - check in case input is string of digits that if it is a valid date:
+ * - in case input is string of numbers, check if it is a valid release date:
  *   if not, search in title (could be improved for movie titles which are
  *   valid as release date as well to filter for both title/date.
  *   i.e. "1984" - I didn't do it however...)
@@ -245,14 +288,15 @@ const searchHandler = function() {
   const dateRegEx = /(\d{4})+/g; //to be used with date search function
   const textRegEx = /[a-z]+/gi;
   const inputHasText = textRegEx.test(searchInput);
-  const notValidDate = searchInput
-    .match(/\d+/g)
-    .every((num) => num > currentYear || num < 1890);
-  console.log("search input is not a movie date:", notValidDate);
 
-  inputHasText || notValidDate
+  inputHasText
     ? searchInMovieTitle(movies, searchInput)
-    : console.warn("search input is not for title");
+    : // if not text, check if it is not a valid release date
+    searchInput
+      .match(/\d+/g)
+      .every((elem) => Number(elem) > currentYear || Number(elem) < 1890)
+      ? searchInMovieTitle(movies, searchInput)
+      : searchMoviesByDate(movies, searchInput, dateRegEx);
 };
 
 // FUNCTIONS FOR EVENT LISTENERS
