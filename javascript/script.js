@@ -1,10 +1,6 @@
 //TODO
-// - no need to rewrite filterMoviesByDate - only series have date as range (see next point)
-// - change filter functions to omit "series" type from movies array --> DONE
-// - implement search functionality
-//     - add a function that returns the number of filtered movies,
-//     - add function that displays a message if no search hit
-//     - add search/filter result info in footer ?
+// - implement search functionality --> DONE
+// - add search/filter result info in footer - only number of movies?
 // - add "show all movies" option to filtering --> DONE
 
 /* eslint-disable no-unused-vars */
@@ -12,7 +8,7 @@
 /* WINC FILM FINDER
  * Assignment film finder
  * Functionalities:
- * - display a movie poster as gallery
+ * - display movie posters as a gallery
  * - filter movies (latest, avenger, x-men, princess, batman)
  *   1 category at a time with radio buttons
  *    As the requirements are about movies, series will not be
@@ -29,13 +25,43 @@ import { movies } from "./movie-database.js";
  * searchInMovieTitle functions
  */
 const gallery = document.getElementById("movie-gallery");
-const searchBar = document.getElementById("movie-search");
+const searchBar = document.getElementById("search-bar");
 const searchButton = document.getElementById("search-button");
 const filterButtons = document.getElementsByClassName("filter-button");
 const filterForAll = document.getElementById("all-movies");
 const currentYear = new Date().getFullYear();
+const noResultMessage = "Sorry, but no movie is found based on your input.";
+const noInputMessage = "Please provide some search criteria.";
 
 // FUNCTIONS FOR FILTERING
+
+/*
+ * function to query the gallery element
+ * (using function instead of an object+methods, because the dynamic nature of the
+ * movie gallery)
+ * @param {string} :
+ *  "content" -> returns an array of children elements
+ *  "size" -> returns the length of the HTMLCollection of children elements
+ *  "movies" -> returns an array of the "movie-posters"
+ *  "movieNum" -> returns the number of "movie-posters"
+ */
+const getMovieGallery = function(request) {
+  const gallery = document.getElementById("movie-gallery");
+  const movies = document.getElementsByClassName("movie-poster");
+
+  switch (request) {
+    case "content":
+      return Array.from(gallery.children);
+    case "size":
+      return gallery.children.length;
+    case "movies":
+      return Array.from(movies);
+    case "movieNum":
+      return movies.length;
+    default:
+      return gallery;
+  }
+};
 
 /* function to create a .movie-poster element
  * @param {object} movie object from imported movies array
@@ -65,23 +91,20 @@ const createPoster = function(movie) {
 /* function to add poster to the #poster-gallery element
  * @param {object} movie object from imported movies array
  */
-const addPoster = (movie) => gallery.appendChild(createPoster(movie));
+const addPoster = (movie) => getMovieGallery().appendChild(createPoster(movie));
 
 /* function to clear the movie-gallery before a new filter is applied
  * removes each poster from  gallery if not empty
  */
-const clearGallery = function(name) {
-  const galleryItems = Array.from(
-    document.getElementsByClassName("gallery-item")
-  );
-  console.log(galleryItems.length);
-
-  galleryItems.length > 0
-    ? galleryItems.forEach((item) => gallery.removeChild(item))
+const clearGallery = function() {
+  // empty?
+  getMovieGallery("size")
+    ? getMovieGallery("content").forEach((item) =>
+      getMovieGallery().removeChild(item)
+    )
     : console.warn(
-      `WARNING: (disregard if first call of clearGallery function)
-       Cannot clear movie-gallery of ${name}-movies, there are no child-elements to remove`,
-      gallery.children
+      `WARNING: Cannot clear movie-gallery, there are no child-elements to remove`,
+      getMovieGallery("content")
     );
 };
 
@@ -147,11 +170,9 @@ const filterMoviesByName = (moviesArr, phrase) => {
  * movie finder show all movies by default
  */
 const showAllMovies = (moviesArr) => {
-  // const filterForAll = document.getElementById("all-movies");
-
   filterForAll.checked
     ? filterMoviesByDate(moviesArr)
-    : console.warn("showAllMovies:", filterForAll.checked);
+    : console.warn("WARNING: showAllMovies checked -", filterForAll.checked);
 };
 
 /* function to add the posters of each movie
@@ -164,7 +185,7 @@ const showAllMovies = (moviesArr) => {
  * change event)
  */
 const buildFilteredGallery = function(moviesArr, phrase) {
-  clearGallery(phrase);
+  clearGallery();
   // call filter functions based on input-value (phrase)
   switch (phrase) {
     case "latest":
@@ -183,6 +204,7 @@ const buildFilteredGallery = function(moviesArr, phrase) {
       filterMoviesByName(moviesArr, "batman");
       break;
     case "all-movies":
+      // clearGallery("buildFilteredGallery / case-all");
       showAllMovies(moviesArr);
   }
 };
@@ -195,32 +217,35 @@ const buildFilteredGallery = function(moviesArr, phrase) {
  * @param {string} - user input from search
  *
  * - calls filterMoviesByName function
- * - calls showNoResultFeedback function
+ * - calls showFeedbackMessage function
  */
 const searchInMovieTitle = function(moviesArr, input) {
-  clearGallery(input);
+  clearGallery();
 
   filterMoviesByName(moviesArr, input.toLowerCase());
 
   // reset radio-buttons to unchecked
   Array.from(filterButtons).forEach((button) => (button.checked = false));
 
-  showNoResultFeedback();
+  showFeedbackMessage(noResultMessage, input);
 };
 
 /* function to search for movies based on their release date
  * @param {array} - the imported movies array
  * @param {string} - user input from search
- * @param {RegEx} - to match 4-digit numbers in search input
  * - get search input
+ *  - if no input -> show feedback
  * - remove duplicate dates
  *   sort dates
  * - if 2 or more dates and no "-": display movies released in those years
  * - if 2 dates with "-" in between: display movies in date-range
  * - if 1 date: display movies released that specific year
+ * - if no result -> show feedback
  */
-const searchMoviesByDate = function(moviesArr, input, dateRegEx) {
-  clearGallery(input);
+const searchMoviesByDate = function(moviesArr, input) {
+  const dateRegEx = /(\d{4})+/g; // matches 4-digit numbers in search input
+
+  clearGallery();
 
   // get rid of date duplicates [split]->{Set}->[Arr]
   const dateInputArr = Array.from(new Set(input.match(dateRegEx))).sort(
@@ -242,7 +267,7 @@ const searchMoviesByDate = function(moviesArr, input, dateRegEx) {
   // reset radio-buttons to unchecked
   Array.from(filterButtons).forEach((button) => (button.checked = false));
 
-  showNoResultFeedback();
+  showFeedbackMessage(noResultMessage, input);
 };
 
 /* function to add feedback message to the gallery if no movie matches
@@ -253,21 +278,24 @@ const searchMoviesByDate = function(moviesArr, input, dateRegEx) {
  * - if gallery is empty:
  *   show all movies and feedback message above posters grid
  */
-const showNoResultFeedback = function() {
+const showFeedbackMessage = function(message, input) {
   // create feedback element with feedback message
-  const galleryContent = document.getElementsByClassName("gallery-item");
-  const noResultFeedback = document.createElement("p");
+  const feedback = document.createElement("p");
 
-  noResultFeedback.classList.add("feedback", "gallery-item");
-  noResultFeedback.innerHTML = `Sorry, but no movie matches your search criteria.`;
+  feedback.classList.add("feedback", "gallery-item");
+  feedback.innerHTML = message;
 
-  if (!galleryContent.length) {
+  if (!getMovieGallery("size") || !input.length) {
+    if (getMovieGallery("size")) {
+      clearGallery();
+    }
+
     // show all movies if no movie matches search terms
     filterForAll.checked = true;
     showAllMovies(movies);
 
     // show feedback message
-    gallery.prepend(noResultFeedback);
+    gallery.prepend(feedback);
   }
 };
 
@@ -285,18 +313,25 @@ const showNoResultFeedback = function() {
 
 const searchHandler = function() {
   const searchInput = searchBar.value.trim();
-  const dateRegEx = /(\d{4})+/g; //to be used with date search function
   const textRegEx = /[a-z]+/gi;
+  const numRegEx = /\d+/g;
+  // variables for regex test (for readability and sanity (regex -g keeps state))
   const inputHasText = textRegEx.test(searchInput);
+  const inputHasNum = numRegEx.test(searchInput);
 
-  inputHasText
-    ? searchInMovieTitle(movies, searchInput)
-    : // if not text, check if it is not a valid release date
-    searchInput
-      .match(/\d+/g)
-      .every((elem) => Number(elem) > currentYear || Number(elem) < 1890)
+  // input validation + function calls
+  !searchInput.length // show feedback if no input
+    ? showFeedbackMessage(noInputMessage, searchInput)
+    : inputHasText
       ? searchInMovieTitle(movies, searchInput)
-      : searchMoviesByDate(movies, searchInput, dateRegEx);
+      : // if no text but numbers, check if it is not a valid release date
+      inputHasNum &&
+        searchInput
+          .match(numRegEx)
+          .every((elem) => Number(elem) > currentYear || Number(elem) < 1890)
+        ? searchInMovieTitle(movies, searchInput)
+        : // search by date if input is valid release date
+        searchMoviesByDate(movies, searchInput);
 };
 
 // FUNCTIONS FOR EVENT LISTENERS
