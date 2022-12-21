@@ -1,10 +1,3 @@
-/* TODO 
- * - center h1
- * - adjust font sizes
- * - style radio-group and search
- * - add @media quires for 3 display sizes
- *    - 1/2/3 col gallery grid 
- *    - make filter menu layout responsive */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
 
 :root {
@@ -13,6 +6,7 @@
   --black: #0f0f0f;
   --white: #fdfdfd;
   --blue: #065fd4;
+  --red: #ff1435;
   --blue-opaque: #065fd415;
 }
 
@@ -21,50 +15,17 @@
   margin: 0;
   padding: 0;
 }
+
 html {
   font-size: 10px;
 }
 
 body {
-  width: 100%;
+  min-width: 375px;
   background-color: var(--black);
   font-family: "Roboto", sans-serif;
   color: var(--white);
   font-size: 1.6rem;
-}
-
-header {
-  width: 100%;
-}
-
-header h1 {
-  width: 100%;
-  font-size: 4rem;
-  text-align: center;
-  padding: 30px 0 40px 0;
-}
-
-#search-bar,
-#filters {
-  margin-bottom: 20px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  column-gap: 10px;
-}
-
-#movie-search {
-  height: 2.5rem;
-}
-#filters {
-  flex-flow: row wrap;
-}
-#filters label {
-  height: 3rem;
-}
-
-#filters input {
-  margin-right: 5px;
 }
 
 main {
@@ -78,15 +39,126 @@ a:active {
   text-decoration: none;
 }
 
-#movie-gallery {
-  margin: 0 auto;
-  max-width: 1000px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: (auto-fill, auto);
-  gap: 20px 10px;
+/*
+ * Header styles
+ */
+header {
+  width: 100%;
 }
 
+header h1 {
+  width: 100%;
+  font-size: 4rem;
+  text-align: center;
+  padding: 30px 0 40px 0;
+}
+
+/* search styles */
+#movie-search {
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  column-gap: 10px;
+}
+
+#search-bar {
+  width: 300px;
+  height: 2.5rem;
+}
+
+/* filter menu styles */
+#filters {
+  margin: 0 auto;
+  padding: 0 10px;
+  width: fit-content;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  column-gap: 15px;
+}
+
+#filters label {
+  height: 3rem;
+}
+
+#filters input {
+  margin-right: 5px;
+}
+
+/*
+ * Movie gallery styles
+ */
+#movie-gallery {
+  margin: 0 auto;
+  /* max-width: 930px; */
+  display: grid;
+  grid-template-columns: 300px;
+  grid-template-rows: auto;
+  grid-auto-flow: row;
+  /* justify-items: center; */
+  justify-content: center;
+  gap: 10px;
+}
+
+/* .movie poster styles */
 .movie-poster {
-  max-width: 300px;
+  width: 300px;
+}
+
+.movie-poster:hover {
+  margin-top: -1px;
+  margin-left: -1px;
+}
+
+.movie-poster img {
+  opacity: 80%;
+}
+
+.movie-poster img:hover {
+  opacity: 100%;
+}
+
+/* Feedback message styles */
+.feedback {
+  padding: 20px 0;
+  grid-area: 1/1/2/-1;
+  color: var(--red);
+  font-size: 2rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+/*
+ * @media rules
+ */
+@media screen and (min-width: 650px) {
+  #search-bar {
+    width: 450px;
+  }
+
+  #filters {
+    max-width: 600px;
+    flex-flow: row wrap;
+  }
+
+  #movie-gallery {
+    grid-template-columns: repeat(2, 300px);
+    gap: 20px 10px;
+  }
+}
+
+@media screen and (min-width: 970px) {
+  #movie-gallery {
+    grid-template-columns: repeat(3, 300px);
+  }
+
+  #search-bar {
+    width: 650px;
+  }
+
+  #filters {
+    max-width: 1000px;
+    flex-flow: row wrap;
+  }
 }
