@@ -70,7 +70,7 @@ const getMovieGallery = function(request) {
 const createPoster = function(movie) {
   const imdbLink = `https://www.imdb.com/title/${movie.imdbID}/`;
   //create elements
-  const poster = document.createElement("div");
+  const poster = document.createElement("li");
   const posterLink = document.createElement("a");
   const posterImage = document.createElement("img");
   // add "img" element to "a" element
@@ -82,6 +82,7 @@ const createPoster = function(movie) {
   posterLink.setAttribute("href", imdbLink);
   posterLink.setAttribute("target", "_blank");
   posterImage.setAttribute("src", movie.poster);
+  posterImage.setAttribute("alt", `Movie Poster for: ${movie.title}`);
 
   // add .movie-poster class to poster-div
   poster.classList.add("movie-poster", "gallery-item");
@@ -283,6 +284,7 @@ const showFeedbackMessage = function(message, input) {
   const feedback = document.createElement("p");
 
   feedback.classList.add("feedback", "gallery-item");
+  feedback.setAttribute("role", "alert");
   feedback.innerHTML = message;
 
   if (!getMovieGallery("size") || !input.length) {
@@ -310,7 +312,6 @@ const showFeedbackMessage = function(message, input) {
  *
  * this function handles key-press and click events on search
  */
-
 const searchHandler = function() {
   const searchInput = searchBar.value.trim();
   const textRegEx = /[a-z]+/gi;
