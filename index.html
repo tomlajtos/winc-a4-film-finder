@@ -22,32 +22,55 @@
 
 <body>
   <header>
-    <h1>Winc Film Finder</h1>
+    <h1 id="page-title">Winc Film Finder</h1>
+
     <div id="movie-search">
       <label for="search-bar">
-        <input id="search-bar" type="search" name="movie-search" value="" />
+        <input id="search-bar" type="search" name="movie-search"
+          aria-description="search for/in movie title(s), release year, multiple years, or a date period"
+          title="search for/in a movie title, release year, multiple years, or a date period" value="" />
       </label>
       <button id="search-button" type="button">Search</button>
     </div>
-    <div id="filters">
-      <label for="latest-movies"><input id="latest-movies" class="filter-button" type="radio" name="movie-filter"
-          value="latest" />Latest movies (from 2014)</label>
-      <label for="avenger-movies"><input id="avenger-movies" class="filter-button" type="radio" name="movie-filter"
-          value="avenger" />Avenger movies</label>
-      <label for="x-men-movies"><input id="x-men-movies" class="filter-button" type="radio" name="movie-filter"
-          value="x-men" />X-Men movies</label>
-      <label for="princess-movies"><input id="princess-movies" class="filter-button" type="radio" name="movie-filter"
-          value="princess" />Princess movies</label>
-      <label for="batman-movies"><input id="batman-movies" class="filter-button" type="radio" name="movie-filter"
-          value="batman" />Batman movies
-      </label>
-      <label for="all-movies"><input id="all-movies" class="filter-button" type="radio" name="movie-filter"
-          value="all-movies" checked />Show all movies
-      </label>
-    </div>
+
+    <menu id="filters" role="radiogroup"
+      aria-description="list of movie filters, only one item is selectable at a time">
+      <li>
+        <label for="latest-movies"><input id="latest-movies" class="filter-button" type="radio" name="movie-filter"
+            value="latest" />Latest movies (from 2014)</label>
+      </li>
+
+      <li>
+        <label for="avenger-movies"><input id="avenger-movies" class="filter-button" type="radio" name="movie-filter"
+            value="avenger" />Avenger movies</label>
+      </li>
+
+      <li>
+        <label for="x-men-movies"><input id="x-men-movies" class="filter-button" type="radio" name="movie-filter"
+            value="x-men" />X-Men movies</label>
+      </li>
+
+      <li>
+        <label for="princess-movies"><input id="princess-movies" class="filter-button" type="radio" name="movie-filter"
+            value="princess" />Princess movies</label>
+      </li>
+
+      <li>
+        <label for="batman-movies"><input id="batman-movies" class="filter-button" type="radio" name="movie-filter"
+            value="batman" />Batman movies
+        </label>
+      </li>
+
+      <li>
+        <label for="all-movies"><input id="all-movies" class="filter-button" type="radio" name="movie-filter"
+            value="all-movies" checked />Show all movies
+        </label>
+      </li>
+    </menu>
   </header>
+
   <main>
-    <div id="movie-gallery"></div>
+    <ul id="movie-gallery"></ul>
   </main>
   <footer></footer>
 </body>
