@@ -1,12 +1,6 @@
-//TODO
-// - implement search functionality --> DONE
-// - add search/filter result info in footer - only number of movies?
-// - add "show all movies" option to filtering --> DONE
-
 /* eslint-disable no-unused-vars */
-
 /* WINC FILM FINDER
- * Assignment film finder
+ *
  * Functionalities:
  * - display movie posters as a gallery
  * - filter movies (latest, avenger, x-men, princess, batman)
@@ -16,6 +10,7 @@
  * - clicking the poster opens corresponding imdb page
  * BONUS feature(s):
  * - search field to search by movie name
+ * - search by release date: exact date, multiple dates or date periods
  */
 
 import { movies } from "./movie-database.js";
@@ -110,15 +105,15 @@ const clearGallery = function() {
 };
 
 /* function to filter movies by date,
- * this can be used for the latest movies filter
+ * use this for filter option: "Latest movies"
  *
  * - filter array argument based on date arguments/ or defaults
  * - loop through the sorted array and call addPoster() on each element
  *
  * @param {array} - the imported movies array
- * @param {string or int} - date, from year (of release) default: 1890
+ * @param {string or int} - dateFrom, filter from year (of release), default: 1890
  *                          (no movie on IMDB is older than 1890)
- * @param {string, int or null} - date, until year (of release) default: current year
+ * @param {string, int or null} - dateUntil, filter until year (of release), default: current year
  *   OR null: only movies matching dateFrom are filtered
  * if no argument(s) provided for date(s), default values are used
  */
@@ -147,9 +142,11 @@ const filterMoviesByDate = (
       .forEach((movie) => addPoster(movie));
 
 /* function to filter movies by name
- * this can be used for the other 4 filter options (avang.,X-m.,prin., batm.)
+ * use this for the other 4 filter options (avang.,X-m.,prin., batm.)
+ *
  * @param {array} - the imported movies array
  * @param {string} - phrase, value of selected radio input
+ *
  * - filter array argument based on phrase argument (radio-input value)
  * - loop through the sorted array and call addPoster() on each element */
 const filterMoviesByName = (moviesArr, phrase) => {
@@ -167,8 +164,10 @@ const filterMoviesByName = (moviesArr, phrase) => {
  * - filterMoviesByDate - with default params.
  * - show warning for dev purposes if no checked attr.
  *
+ * @param {array} - the imported movies array
+ *
  * IMPORTANT: call function in global context to have
- * movie finder show all movies by default
+ * movie finder show all movies by default on page load
  */
 const showAllMovies = (moviesArr) => {
   filterForAll.checked
@@ -214,6 +213,7 @@ const buildFilteredGallery = function(moviesArr, phrase) {
 
 /* function to search for movies by checking if
  * search bar input-value is part of the movie title
+ *
  * @param {array} - the imported movies array
  * @param {string} - user input from search
  *
@@ -232,8 +232,10 @@ const searchInMovieTitle = function(moviesArr, input) {
 };
 
 /* function to search for movies based on their release date
+ *
  * @param {array} - the imported movies array
  * @param {string} - user input from search
+ *
  * - get search input
  *  - if no input -> show feedback
  * - remove duplicate dates
@@ -274,6 +276,9 @@ const searchMoviesByDate = function(moviesArr, input) {
 /* function to add feedback message to the gallery if no movie matches
  * the search terms
  *
+ * @param {string} - feedback message in case of incorrect input
+ * @param {string} - user input from search
+ *
  * - create feedback element
  * - check for gallery size
  * - if gallery is empty:
@@ -307,8 +312,8 @@ const showFeedbackMessage = function(message, input) {
  * - check if search input is text
  * - in case input is string of numbers, check if it is a valid release date:
  *   if not, search in title (could be improved for movie titles which are
- *   valid as release date as well to filter for both title/date.
- *   i.e. "1984" - I didn't do it however...)
+ *   valid as release date as well to filter for both title&date.
+ *   i.e. "1984" - maybe in the future...)
  *
  * this function handles key-press and click events on search
  */
@@ -333,6 +338,20 @@ const searchHandler = function() {
         ? searchInMovieTitle(movies, searchInput)
         : // search by date if input is valid release date
         searchMoviesByDate(movies, searchInput);
+};
+
+// OTHER FUNCTION(S)
+
+/*
+ * function to show arrow to top icon on scroll
+ * changes the arrow container element display property (style)
+ */
+const showArrowToTop = function() {
+  const arrowToTop = document.getElementById("arrow-top-container");
+
+  document.body.scrollTop > 250 || document.documentElement.scrollTop > 250
+    ? (arrowToTop.style.display = "block")
+    : (arrowToTop.style.display = "none");
 };
 
 // FUNCTIONS FOR EVENT LISTENERS
@@ -367,7 +386,16 @@ const addListenersToSearch = function() {
   searchButton.addEventListener("click", searchHandler);
 };
 
+/*
+ * function to add event listener on scroll to show the back-to-top arrow
+ */
+const addListenerToScroll = function() {
+  document.addEventListener("scroll", showArrowToTop);
+};
+
 // CALL FUNCTIONS
 showAllMovies(movies);
+showArrowToTop();
 addListenerToFilterButtons();
 addListenersToSearch();
+addListenerToScroll();

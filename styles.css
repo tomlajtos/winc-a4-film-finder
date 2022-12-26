@@ -135,7 +135,7 @@ header h1 {
 }
 
 /*
- * footer icon styles
+ * footer/ arrow icon styles
  */
 #arrow-top-container {
   height: 60px;
@@ -145,8 +145,6 @@ header h1 {
   right: 10px;
   border: 1px dashed var(--white);
   border-radius: 50%;
-  /* display: none; */
-  /* display: block; */
 }
 
 #arrow-top-icon {
