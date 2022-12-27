@@ -96,12 +96,10 @@ header h1 {
  */
 #movie-gallery {
   margin: 0 auto;
-  /* max-width: 930px; */
   display: grid;
   grid-template-columns: 300px;
   grid-template-rows: auto;
   grid-auto-flow: row;
-  /* justify-items: center; */
   justify-content: center;
   gap: 10px;
 }

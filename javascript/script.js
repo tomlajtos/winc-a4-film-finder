@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* WINC FILM FINDER
  *
  * Functionalities:
@@ -15,7 +14,7 @@
 
 import { movies } from "./movie-database.js";
 
-/* global variables for movie-gallery and search
+/* Global variables for movie-gallery and search
  * to use with addPoster, clearGallery and
  * searchInMovieTitle functions
  */
@@ -342,8 +341,7 @@ const searchHandler = function() {
 
 // OTHER FUNCTION(S)
 
-/*
- * function to show arrow to top icon on scroll
+/* function to show arrow to top icon on scroll
  * changes the arrow container element display property (style)
  */
 const showArrowToTop = function() {
@@ -386,8 +384,7 @@ const addListenersToSearch = function() {
   searchButton.addEventListener("click", searchHandler);
 };
 
-/*
- * function to add event listener on scroll to show the back-to-top arrow
+/* function to add event listener on scroll to show the back-to-top arrow
  */
 const addListenerToScroll = function() {
   document.addEventListener("scroll", showArrowToTop);
