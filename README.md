@@ -1,7 +1,5 @@
 ## Winc Film Finder
 
----
-
 ### Functionalities:
 
 - displays movie posters as a gallery
